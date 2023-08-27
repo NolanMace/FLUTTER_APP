@@ -1,15 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:lzyfs_app/jverify_controller.dart';
+import 'package:lzyfs_app/to_login_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_config.dart';
 
-class CabinetPageController extends GetxController {
+class CabinetPageController extends ToLoginController {
   final dio = Dio();
   final String getMyCabinetItemsByAppIdAndPhone =
       AppConfig.getMyCabinetItemsByAppIdAndPhone;
   final JverifyController jverifyController = Get.find();
-  RxBool isLogged = false.obs;
   RxBool yfsselected = true.obs;
   RxBool jjsselected = false.obs;
   RxBool wxsselected = false.obs;
@@ -211,11 +213,18 @@ class CabinetPageController extends GetxController {
     print(isLogged.value);
     final prefs = await SharedPreferences.getInstance();
     try {
+      isRequesting.value = true;
+      isRequesting.refresh();
       //获取名为“token”的值，如果该键不存在，则返回默认值null
       final token = prefs.getString('token');
       if (token == null) {
         return;
       }
+      EasyLoading.show(
+          status: '加载中...',
+          indicator: const CircularProgressIndicator(
+            color: Color.fromARGB(255, 192, 1, 1),
+          ));
       final options = Options(
         headers: {
           'Authorization': 'Bearer $token',
@@ -226,6 +235,7 @@ class CabinetPageController extends GetxController {
           await dio.get(getMyCabinetItemsByAppIdAndPhone, options: options);
       if (res.statusCode == 200) {
         isLogged.value = true;
+        EasyLoading.dismiss();
         print(res.data);
         boxProducts.value = res.data['box_products'];
         dqProducts.value = res.data['dq_products'];
@@ -241,14 +251,19 @@ class CabinetPageController extends GetxController {
         }
         updateShowProducts();
       } else {
+        EasyLoading.dismiss();
         prefs.remove('token');
         print("111");
         isLogged.value = false;
       }
     } catch (e) {
+      EasyLoading.dismiss();
       print(e);
       prefs.remove('token');
       isLogged.value = false;
+    } finally {
+      isRequesting.value = false;
+      isRequesting.refresh();
     }
   }
 
@@ -256,19 +271,30 @@ class CabinetPageController extends GetxController {
     shipmentOrderNote.value = notes;
   }
 
-  void toLogin() {
-    jverifyController.loginAuth();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-    dio.close();
-  }
+  // @override
+  // void onClose() {
+  //   super.onClose();
+  //   dio.close();
+  // }
 
   @override
   void onInit() {
     super.onInit();
+    getMyProducts();
+  }
+
+  @override
+  void refresh() {
+    super.refresh();
+    selectedAll.value = false;
+    selectedCabinetItemIds.clear();
+    selectedBoxProducts.clear();
+    selectedDqProducts.clear();
+    selectedPoolProducts.clear();
+    showProducts.clear();
+    boxProducts.clear();
+    dqProducts.clear();
+    poolProducts.clear();
     getMyProducts();
   }
 }

@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/state_manager.dart';
 import 'package:lzyfs_app/app_config.dart';
+import 'package:lzyfs_app/back_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tobias/tobias.dart';
 
@@ -21,6 +24,7 @@ class NetworkController extends GetxController {
       if (response.statusCode == 200) {
         String token = response.data['token'];
         await saveDataToCache('token', token);
+        EasyLoading.showToast('登录成功');
       }
     } catch (e) {
       print(e);
@@ -37,13 +41,29 @@ class NetworkController extends GetxController {
     }
   }
 
-  Future<void> smsLoginRequest(phone, smsCode) async {
+  Future<String> smsLoginRequest(phone, smsCode) async {
+    EasyLoading.show(
+        status: '登录中...',
+        indicator: const CircularProgressIndicator(
+          color: Color.fromARGB(255, 192, 1, 1),
+        ));
     try {
       Response response = await Dio().post(AppConfig.smsLoginUrl,
           data: {"phone": phone, "code": smsCode, "app_id": appId});
       print(response.data);
+      if (response.statusCode != 200) {
+        EasyLoading.showToast('登录失败');
+        return '验证码错误';
+      }
+      String token = response.data['token'];
+      await saveDataToCache('token', token);
+      EasyLoading.showToast('登录成功');
+      BackHome.backHome();
+      return '';
     } catch (e) {
+      EasyLoading.showToast('登录失败');
       print(e);
+      return '验证码错误';
     }
   }
 

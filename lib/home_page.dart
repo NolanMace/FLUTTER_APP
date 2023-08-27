@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:lzyfs_app/home_page_controller.dart';
+import 'package:lzyfs_app/stroke_text.dart';
+
+import 'catch_error_image.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -10,151 +13,169 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 211, 178, 142),
-              Color.fromARGB(255, 249, 175, 135)
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+    return Scaffold(
+        appBar: AppBar(
+          title: SizedBox(
+            width: 90,
+            height: 52,
+            child: Column(
+              children: [
+                Image.network(
+                    'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/logo.png',
+                    width: 90,
+                    height: 40,
+                    fit: BoxFit.fill),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
+          backgroundColor: const Color.fromARGB(255, 4, 4, 6),
+          toolbarHeight: 52,
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Positioned(
-                      child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width / (16 / 7) * 1.55,
-                    child: Image.network(
-                      'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/CarouselSlider.png',
-                      fit: BoxFit.fill,
-                    ),
-                  )),
-                  Positioned(
-                    bottom: MediaQuery.of(context).size.width / (16 / 7) * 0.20,
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / (16 / 7),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.87,
-                                height: MediaQuery.of(context).size.width /
-                                    (16 / 7) *
-                                    0.87,
-                                child: Obx(() => CarouselSlider(
-                                      options: CarouselOptions(
-                                        // aspectRatio: 16 / 7,
-                                        height:
-                                            MediaQuery.of(context).size.width /
-                                                (16 / 7),
-                                        viewportFraction: 1.0, // 设置轮播项占据整个屏幕宽度
-                                        autoPlay: true,
-                                        autoPlayInterval:
-                                            const Duration(seconds: 4),
-                                      ),
-                                      items: homePageController.swiperItems
-                                          .map((item) {
-                                        return Builder(
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.grey,
-                                              ),
-                                              child: Image.network(
-                                                item['image_url'],
-                                                fit: BoxFit.cover,
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }).toList(),
-                                    )))
-                          ],
-                        )),
-                  )
-                ],
+        body: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              color: Colors.black,
+              image: DecorationImage(
+                image: NetworkImage(
+                    'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/background.jpg'),
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 10),
-              Obx(() => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () => homePageController.getBoxes("box"),
-                            child: Image.network(
-                              'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/yfs.png',
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 7,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.87,
+                    height: MediaQuery.of(context).size.width / (16 / 7) * 0.87,
+                    child: Obx(
+                      () => ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: CarouselSlider(
+                            options: CarouselOptions(
+                              // aspectRatio: 16 / 7,
                               height:
-                                  homePageController.navigateSelectedSizes[0] *
-                                      MediaQuery.of(context).size.width,
-                              width:
-                                  homePageController.navigateSelectedSizes[0] *
-                                      MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.width / (16 / 7),
+                              viewportFraction: 1.0, // 设置轮播项占据整个屏幕宽度
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(seconds: 4),
+                              onPageChanged: (index, reason) =>
+                                  {homePageController.onSwiperChange(index)},
+                            ),
+                            items: homePageController.swiperItems.map((item) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.grey,
+                                      ),
+                                      child: CatchErrorImage(
+                                        url: item['image_url'],
+                                        fit: BoxFit.cover,
+                                      ));
+                                },
+                              );
+                            }).toList(),
+                          )),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Obx(() => LzyfCarouselSliderIndicator(
+                        index: homePageController.swiperCurrentIndex.value,
+                        itemCount: homePageController.swiperItems.length,
+                      )),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 80,
+                      child: Obx(() => WinbarContainer(
+                            items: homePageController.winbars.value,
+                          ))),
+                  const SizedBox(height: 5),
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () => homePageController.getBoxes("box"),
+                                child: HomePageFirstNavigateButton(
+                                  selctedUrl:
+                                      'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/selectedyfs.png',
+                                  unselectedUrl:
+                                      'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/yfs.png',
+                                  selectedType:
+                                      homePageController.category.value,
+                                  type: 'box',
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () => homePageController.getBoxes('dq'),
-                            child: Image.network(
-                              'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/jjs.png',
-                              height:
-                                  homePageController.navigateSelectedSizes[1] *
-                                      MediaQuery.of(context).size.width,
-                              width:
-                                  homePageController.navigateSelectedSizes[1] *
-                                      MediaQuery.of(context).size.width,
+                          Expanded(
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () => homePageController.getBoxes('dq'),
+                                child: HomePageFirstNavigateButton(
+                                  selctedUrl:
+                                      'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/selectedjjs.png',
+                                  unselectedUrl:
+                                      'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/jjs.png',
+                                  selectedType:
+                                      homePageController.category.value,
+                                  type: 'dq',
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () => homePageController.getPools(),
-                            child: Image.network(
-                              'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/wxs.png',
-                              height:
-                                  homePageController.navigateSelectedSizes[2] *
-                                      MediaQuery.of(context).size.width,
-                              width:
-                                  homePageController.navigateSelectedSizes[2] *
-                                      MediaQuery.of(context).size.width,
+                          Expanded(
+                            child: Center(
+                              child: GestureDetector(
+                                  onTap: () => homePageController.getPools(),
+                                  child: HomePageFirstNavigateButton(
+                                    selctedUrl:
+                                        'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/selectedwxs.png',
+                                    unselectedUrl:
+                                        'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/wxs.png',
+                                    selectedType:
+                                        homePageController.category.value,
+                                    type: 'pool',
+                                  )),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  )),
-              const SizedBox(height: 10),
-              Obx(() => GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    childAspectRatio: 4 / 5.5,
-                    mainAxisSpacing: 0.01 * MediaQuery.of(context).size.width,
-                    crossAxisSpacing: 0.02 * MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 0.02 * MediaQuery.of(context).size.width),
-                    children: List<Widget>.generate(
-                        homePageController.boxesOrPools.length,
-                        (index) => BoxOrPoolCard(
+                        ],
+                      )),
+                  const SizedBox(height: 10),
+                  Obx(() => GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        childAspectRatio: 4 / 4.5,
+                        mainAxisSpacing:
+                            0.03 * MediaQuery.of(context).size.width,
+                        crossAxisSpacing:
+                            0.02 * MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                0.02 * MediaQuery.of(context).size.width),
+                        children: List<Widget>.generate(
+                            homePageController.boxesOrPools.length, (index) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (homePageController.category.value == 'pool') {
+                                homePageController.toWxsPage(
+                                    homePageController.boxesOrPools[index]);
+                              } else {
+                                homePageController.toYfsJjsPage(
+                                    homePageController.boxesOrPools[index]);
+                              }
+                            },
+                            child: BoxOrPoolCard(
                               boxName:
                                   homePageController.category.value == 'pool'
                                       ? homePageController.boxesOrPools[index]
@@ -174,14 +195,138 @@ class HomePage extends StatelessWidget {
                               showNewLabel: homePageController
                                   .boxesOrPools[index]['show_new_label'],
                               category: homePageController.categoryStr.value,
-                            )).toList(),
-                  )),
-              const SizedBox(
-                height: 70,
-              )
-            ],
+                              labelType: homePageController.boxesOrPools[index]
+                                      ['label_type'] ??
+                                  false,
+                              labelUrl: homePageController.boxesOrPools[index]
+                                      ['label_url'] ??
+                                  '',
+                            ),
+                          );
+                        }).toList(),
+                      )),
+                  const SizedBox(
+                    height: 80,
+                  )
+                ],
+              ),
+            )));
+  }
+}
+
+class LzyfCarouselSliderIndicator extends StatelessWidget {
+  final int index;
+  final int itemCount;
+  const LzyfCarouselSliderIndicator(
+      {Key? key, required this.index, required this.itemCount})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List<Widget>.generate(itemCount, (idx) {
+        bool isActive = idx == index;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: isActive ? 20.0 : 8.0,
+          height: 4.0,
+          margin: const EdgeInsets.symmetric(horizontal: 2.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: isActive
+                ? const Color.fromARGB(255, 197, 1, 2)
+                : const Color.fromARGB(255, 143, 143, 142),
+            borderRadius: BorderRadius.circular(4.0),
           ),
-        ));
+        );
+      }).toList(),
+    );
+  }
+}
+
+class WinbarContainer extends StatelessWidget {
+  final List<dynamic> items;
+  const WinbarContainer({Key? key, required this.items}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List<Widget>.generate(
+            items.length,
+            (index) => GestureDetector(
+                  onTap: () {
+                    Get.toNamed('/categoryPage', arguments: items[index]);
+                  },
+                  child: SizedBox(
+                    width: 120,
+                    height: 60,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Stack(
+                          children: [
+                            Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.network(
+                                      items[index]['window_page_url'],
+                                      width: 110,
+                                      height: 35,
+                                      fit: BoxFit.cover),
+                                )),
+                            Positioned(
+                                bottom: 0,
+                                right: 2,
+                                child: Image.network(items[index]['people_url'],
+                                    width: 35,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                    filterQuality: FilterQuality.high)),
+                            Positioned(
+                                top: 30,
+                                left: 5,
+                                child: StrokeText(
+                                    text: items[index]['window_name'],
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    strokeColor: Colors.black,
+                                    strokeWidth: 3)),
+                          ],
+                        )),
+                        const SizedBox(width: 10)
+                      ],
+                    ),
+                  ),
+                )),
+      ),
+    );
+  }
+}
+
+class HomePageFirstNavigateButton extends StatelessWidget {
+  final String selectedType;
+  final String type;
+  final String unselectedUrl;
+  final String selctedUrl;
+  const HomePageFirstNavigateButton(
+      {Key? key,
+      required this.selectedType,
+      required this.type,
+      required this.unselectedUrl,
+      required this.selctedUrl})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      selectedType == type ? selctedUrl : unselectedUrl,
+      height: 0.15 * MediaQuery.of(context).size.width,
+      width: 0.25 * MediaQuery.of(context).size.width,
+    );
   }
 }
 
@@ -191,27 +336,24 @@ class BoxOrPoolCard extends StatelessWidget {
   final double boxPrice;
   final bool showNewLabel;
   final String category;
+  final bool labelType;
+  final String labelUrl;
   const BoxOrPoolCard(
       {Key? key,
       required this.boxName,
       required this.imageUrl,
       required this.boxPrice,
       required this.showNewLabel,
-      required this.category})
+      required this.category,
+      this.labelType = false,
+      this.labelUrl = ''})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 0.4 * MediaQuery.of(context).size.width,
-      height: 0.6 * MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: 0.007 * MediaQuery.of(context).size.width, // 边框宽度
-          color: Colors.black, // 边框颜色
-        ),
-      ),
+      height: 0.5 * MediaQuery.of(context).size.width,
       child: Column(
         children: [
           SizedBox(
@@ -219,73 +361,98 @@ class BoxOrPoolCard extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned(
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(6), // 左上角圆角
-                        topRight: Radius.circular(6), // 右上角圆角
-                      ),
-                      child: AspectRatio(
-                        aspectRatio: 1.0,
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.fill,
-                        ),
-                      )),
+                  child: AspectRatio(
+                    aspectRatio: 5 / 4,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 218, 1, 1),
+                              width: 2)),
+                      child: CatchErrorImage(url: imageUrl, fit: BoxFit.cover),
+                    ),
+                  ),
                 ),
                 Positioned(
-                  bottom: 0.01 * MediaQuery.of(context).size.width,
-                  right: 0.2 * MediaQuery.of(context).size.width,
+                  bottom: 0.03 * MediaQuery.of(context).size.width,
+                  left: 0.03 * MediaQuery.of(context).size.width,
                   child: showNewLabel ? const NewLabel() : const SizedBox(),
-                )
+                ),
+                Positioned(
+                  top: 0.01 * MediaQuery.of(context).size.width,
+                  right: 0.01 * MediaQuery.of(context).size.width,
+                  child: Container(
+                    width: 0.15 * MediaQuery.of(context).size.width,
+                    height: 0.05 * MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 0.01 * MediaQuery.of(context).size.width),
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/label.png'),
+                            fit: BoxFit.fill)),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        category,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
           Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                boxName,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                    'https://yfsmax.oss-cn-hangzhou.aliyuncs.com/huidi.png'),
+                fit: BoxFit.fill,
               ),
-              Container(
-                  margin: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '¥${boxPrice.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.red,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                      SizedBox(
-                        width: 0.1 * MediaQuery.of(context).size.width,
-                        height: 0.05 * MediaQuery.of(context).size.width,
-                        child: TrapezoidShape(
-                          child: Center(
-                            child: Text(
-                              category,
-                              style: const TextStyle(
-                                  fontSize: 8,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  boxName,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Container(
+                    margin: const EdgeInsets.only(left: 5, right: 5, bottom: 3),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '¥${boxPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.red,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                      )
-                    ],
-                  ))
-            ],
+                        SizedBox(
+                          width: 0.12 * MediaQuery.of(context).size.width,
+                          height: 0.06 * MediaQuery.of(context).size.width,
+                          child: labelType
+                              ? CatchErrorImage(url: labelUrl, fit: BoxFit.fill)
+                              : const SizedBox(),
+                        )
+                      ],
+                    ))
+              ],
+            ),
           ))
         ],
       ),
@@ -343,7 +510,7 @@ class _NewLabelState extends State<NewLabel>
               BoxShadow(
                 color: Colors.orange,
                 blurRadius: 5.0,
-                spreadRadius: 3.0,
+                spreadRadius: 1.0,
               ),
             ],
           ),

@@ -169,16 +169,16 @@ class JverifyController extends GetxController {
         uiConfig.authBackgroundImage = "main_bg";
 
         uiConfig.navHidden = true;
-        uiConfig.navColor = const Color.fromARGB(255, 209, 178, 142).value;
+        uiConfig.navColor = const Color.fromARGB(255, 0, 0, 0).value;
         // uiConfig.navColor = const Color.fromARGB(255, 249, 175, 135).value;
         // uiConfig.navText = "登录";
         // uiConfig.navTextColor = Colors.blue.value;
         // uiConfig.navReturnImgPath = "return_bg"; //图片必须存在
 
-        uiConfig.logoWidth = 150;
-        uiConfig.logoHeight = 150;
+        uiConfig.logoWidth = 200;
+        uiConfig.logoHeight = 200;
         //uiConfig.logoOffsetX = isiOS ? 0 : null;//(screenWidth/2 - uiConfig.logoWidth/2).toInt();
-        uiConfig.logoOffsetY = 10;
+        uiConfig.logoOffsetY = 20;
         uiConfig.logoVerticalLayoutItem = JVIOSLayoutItem.ItemSuper;
         uiConfig.logoHidden = false;
         uiConfig.logoImgPath = "logo";
@@ -186,14 +186,14 @@ class JverifyController extends GetxController {
         uiConfig.numberFieldWidth = 200;
         uiConfig.numberFieldHeight = 40;
         //uiConfig.numFieldOffsetX = isiOS ? 0 : null;//(screenWidth/2 - uiConfig.numberFieldWidth/2).toInt();
-        uiConfig.numFieldOffsetY = isiOS ? 20 : 160;
+        uiConfig.numFieldOffsetY = isiOS ? 40 : 200;
         uiConfig.numberVerticalLayoutItem = JVIOSLayoutItem.ItemLogo;
-        uiConfig.numberColor = Colors.black.value;
+        uiConfig.numberColor = Colors.white.value;
         uiConfig.numberSize = 20;
 
-        uiConfig.sloganOffsetY = isiOS ? 20 : 200;
+        uiConfig.sloganOffsetY = isiOS ? 20 : 240;
         uiConfig.sloganVerticalLayoutItem = JVIOSLayoutItem.ItemNumber;
-        uiConfig.sloganTextColor = const Color.fromARGB(255, 84, 84, 84).value;
+        uiConfig.sloganTextColor = Colors.white.value;
         uiConfig.sloganTextSize = 13;
         // uiConfig.sloganHidden = true;
         //uiConfig.sloganHidden = 0;
@@ -201,7 +201,7 @@ class JverifyController extends GetxController {
         uiConfig.logBtnWidth = 200;
         uiConfig.logBtnHeight = 60;
         //uiConfig.logBtnOffsetX = isiOS ? 0 : null;//(screenWidth/2 - uiConfig.logBtnWidth/2).toInt();
-        uiConfig.logBtnOffsetY = isiOS ? 20 : 250;
+        uiConfig.logBtnOffsetY = isiOS ? 20 : 290;
         uiConfig.logBtnVerticalLayoutItem = JVIOSLayoutItem.ItemSlogan;
         uiConfig.logBtnText = "";
         uiConfig.logBtnTextColor = Colors.white.value;
@@ -227,15 +227,15 @@ class JverifyController extends GetxController {
         uiConfig.privacyOffsetY = 100; // 距离底部距离
         uiConfig.privacyVerticalLayoutItem = JVIOSLayoutItem.ItemSuper;
         uiConfig.clauseName = "协议1";
-        uiConfig.clauseUrl = "https://www.baidu.com";
-        uiConfig.clauseBaseColor = Colors.black.value;
+        uiConfig.clauseUrl = "https://www.yfsmax.top/protocol.html";
+        uiConfig.clauseBaseColor = Colors.white.value;
         uiConfig.clauseNameTwo = "协议二";
-        uiConfig.clauseUrlTwo = "https://www.hao123.com";
+        uiConfig.clauseUrlTwo = "https://www.yfsmax.top/protocol.html";
         uiConfig.clauseColor = const Color.fromARGB(255, 183, 40, 11).value;
         uiConfig.privacyText = ["我已认真阅读并同意"];
         uiConfig.privacyTextSize = 13;
         uiConfig.privacyItem = [
-          JVPrivacy("自定义协议1", "https://www.baidu.com",
+          JVPrivacy("用户协议", "https://www.yfsmax.top/protocol.html",
               beforeName: "==", afterName: "++", separator: "*"),
         ];
         uiConfig.textVerAlignment = 1;
@@ -324,7 +324,7 @@ class JverifyController extends GetxController {
         // });
         // widgetList.add(textWidget);
 
-        final String message_icon = "jv_add_custom_button"; // 标识控件 id
+        String message_icon = "jv_add_custom_button"; // 标识控件 id
         JVCustomWidget message_icon_button =
             JVCustomWidget(message_icon, JVCustomWidgetType.button);
         message_icon_button.title = "";
@@ -355,8 +355,9 @@ class JverifyController extends GetxController {
         buttonWidget.top = 450;
         buttonWidget.width = 150;
         buttonWidget.height = 40;
+        buttonWidget.titleColor = Colors.white.value;
         buttonWidget.isShowUnderline = false;
-        buttonWidget.backgroundColor = Colors.brown.value;
+        buttonWidget.backgroundColor = Colors.white.value;
         //buttonWidget.btnNormalImageName = "";
         //buttonWidget.btnPressedImageName = "";
         //buttonWidget.textAlignment = JVTextAlignmentType.left;
@@ -401,7 +402,7 @@ class JverifyController extends GetxController {
         });
 
         /// 再，执行同步的一键登录接口
-        jverify.loginAuthSyncApi(autoDismiss: false);
+        jverify.loginAuthSyncApi(autoDismiss: true);
       } else {
         _result.value = "[2016],msg = 当前网络环境不支持认证";
         /* 弹框模式

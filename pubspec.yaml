@@ -30,8 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -42,6 +41,12 @@ dependencies:
   dio: ^5.2.1+1
   tobias: ^3.1.1
   shared_preferences: ^2.1.1
+  flutter_easyloading: ^3.0.5
+  intl: ^0.18.1
+  flutter_pickers: ^2.1.9
+  webview_flutter: ^4.2.2
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +71,26 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  fonts:
+    - family: AlibabaSans
+      fonts:
+        - asset: assets/fonts/AlibabaSans-black.otf
+    - family: SourceHanSansCN
+      fonts:
+        - asset: assets/fonts/SourceHanSansCN-Bold.otf
+          weight: 700
+        - asset: assets/fonts/SourceHanSansCN-Heavy.otf
+          weight: 800
+        - asset: assets/fonts/SourceHanSansCN-Light.otf
+          weight: 300
+        - asset: assets/fonts/SourceHanSansCN-Medium.otf
+          weight: 600
+        - asset: assets/fonts/SourceHanSansCN-Normal.otf
+          weight: 500
+        - asset: assets/fonts/SourceHanSansCN-Regular.otf
+          weight: 400
+        - asset: assets/fonts/SourceHanSansCN-ExtraLight.otf
+          weight: 200
 
   # To add assets to your application, add an assets section, like this:
   # assets:
